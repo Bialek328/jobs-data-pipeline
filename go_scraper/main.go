@@ -3,13 +3,14 @@ package main
 import (
 	"log"
 	"strings"
+    "time"
 
 	"github.com/gocolly/colly"
 )
 
 type JobOffer struct {
-    Url string
-    Date string
+    Url interface{}
+    Date interface{}
     TechStack []string
     Experience string
 }
@@ -41,7 +42,12 @@ func main() {
     })      
 
     jobCollector.OnScraped(func(r *colly.Response) {
-        log.Println(techStack)
+        job := JobOffer{
+            Url: r.Request.URL,
+            Date: time.Now().Format("2006.01.02"), 
+            TechStack: techStack,
+        }
+        log.Println(job)
         techStack = []string{}
     })
     
