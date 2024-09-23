@@ -9,14 +9,16 @@ import (
 )
 
 type JobOffer struct {
-    Url interface{}
-    Date interface{}
-    TechStack []string
-    Experience string
+    Url interface{} `json:"url"`
+    Date interface{} `json:"date"`
+    TechStack []string `json:"techStack"`
+    Info []string `json:"info"`
 }
 
 func main() {
     var techStack []string
+    var info []string
+
     log.Println("Starting collector")
     c := colly.NewCollector()
 
@@ -37,6 +39,11 @@ func main() {
         })
     })
     
+    jobCollector.OnHTML("div.MuiBox-root.css-r1n8l8", func(en *colly.HTMLElement) {
+        en.ForEach("ul li", func(_ int, ele *colly.HTMLElement) {
+            info = append(info, ele.Text)
+        })
+    })
     jobCollector.OnRequest(func(r *colly.Request) {
         log.Println("visiting:", r.URL)
     })      
@@ -46,9 +53,11 @@ func main() {
             Url: r.Request.URL,
             Date: time.Now().Format("2006.01.02"), 
             TechStack: techStack,
+            Info: info,
         }
         log.Println(job)
         techStack = []string{}
+        info = []string{}
     })
     
     c.Visit("https://justjoin.it/trojmiasto/python")
