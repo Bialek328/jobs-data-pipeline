@@ -13,7 +13,8 @@ type JobOffer struct {
     Url interface{} `json:"url"`
     Date interface{} `json:"date"`
     TechStack []string `json:"techStack"`
-    Info []string `json:"info"`
+    MiscInfo []string `json:"info"`
+    Salary string `json:"salary"`
 }
 func timer(name string) func() {
     start := time.Now()
@@ -47,6 +48,15 @@ func main() {
             techStack = append(techStack, el.Text)
         })
     })
+
+    jobCollector.OnHTML("div.MuiBox-root.css-1km0bek span.css-1pavfqb", func(e *colly.HTMLElement) {
+        str := []string{}
+        e.ForEach("span", func(_ int, elele *colly.HTMLElement) {
+            str = append(str, e.Text)
+        })
+        res := str[0]
+        log.Println(res)
+    })
     
     jobCollector.OnHTML("div.MuiBox-root.css-r1n8l8", func(en *colly.HTMLElement) {
         en.ForEach("ul li", func(_ int, ele *colly.HTMLElement) {
@@ -62,7 +72,7 @@ func main() {
             Url: r.Request.URL,
             Date: time.Now().Format("2006.01.02"), 
             TechStack: techStack,
-            Info: info,
+            MiscInfo: info,
         }
         log.Println(job)
         techStack = []string{}
