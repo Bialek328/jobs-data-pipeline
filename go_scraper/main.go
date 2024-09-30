@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strings"
-    "time"
+	"time"
 
 	"github.com/gocolly/colly"
 )
@@ -14,21 +15,29 @@ type JobOffer struct {
     TechStack []string `json:"techStack"`
     Info []string `json:"info"`
 }
+func timer(name string) func() {
+    start := time.Now()
+    return func() {
+        fmt.Printf("%s took %v\n", name, time.Since(start))
+    }
+}
 
 func main() {
+    defer timer("main")()
     var techStack []string
     var info []string
 
     log.Println("Starting collector")
     c := colly.NewCollector()
 
-    jobCollector := colly.NewCollector()
+    jobCollector := colly.NewCollector(colly.Async(true))
 
 
     c.OnHTML("div.MuiBox-root a", func(e *colly.HTMLElement) {
         inner := e.Attr("href")
         if inner != "" && strings.Contains(inner, "/offers/"){
             jobCollector.Visit(e.Request.AbsoluteURL(inner))
+            jobCollector.Wait()
         }
     })
 
