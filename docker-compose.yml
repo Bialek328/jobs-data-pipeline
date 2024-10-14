@@ -1,0 +1,12 @@
+services:
+  db:
+    build:
+      context: ./db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin 
+      POSTGRES_DB: jobs
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/pgdata:/var/lib/postgresql/data
