@@ -39,7 +39,7 @@ func InitDB() (*sql.DB, error) {
         log.Fatal(err)
         return nil, err
     }
-    defer db.Close()
+    // defer db.Close()
 
 
     err = db.Ping()
