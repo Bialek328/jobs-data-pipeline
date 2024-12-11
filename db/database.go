@@ -29,10 +29,10 @@ func InitDB() (*sql.DB, error) {
     dbHost := os.Getenv("DB_HOST")
     fmt.Println(dbHost)
     dbUser := os.Getenv("DB_USER")
-    dbPasswd := os.Getenv("DB_PASSWORD")
+    // dbPasswd := os.Getenv("DB_PASSWORD")
     dbName := os.Getenv("DB_NAME")
     dbPort := os.Getenv("DB_PORT")
-    connStr := "host=" + dbHost + " port=" + dbPort + " user=" + dbUser + " password=" + dbPasswd + " dbname=" + dbName + " sslmode=disable"
+    connStr := "host=" + dbHost + " port=" + dbPort + " user=" + dbUser + " dbname=" + dbName + " sslmode=disable"
 
     db, err := sql.Open("postgres", connStr)
     if err != nil {
